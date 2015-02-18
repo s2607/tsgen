@@ -59,13 +59,10 @@ func getclass(in *bufio.Reader) *class {
 	return Class
 
 }
-func (Student *student) appendclass(Class class) {
-	Student.classes = Student.classes[0 : len(Student.classes)+1]
-	Student.classes[len(Student.classes)] = Class
-}
-func (Student student) tsvimport(in *bufio.Reader) {
+
+func (Student *student) tsvimport(in *bufio.Reader) {
 	for c := getclass(in); c != nil; c = getclass(in) {
-		Student.appendclass(*c)
+		Student.classes = append(Student.classes, *c)
 	}
 }
 
