@@ -68,11 +68,16 @@ func (Student *student) tsvimport(in *bufio.Reader) {
 		Student.classes = append(Student.classes, *c)
 	}
 }
+func (Student student) typetrans() string {
+	//TODO: this should really use some kind of file pointer instead
+	//eventually we may want to export weird formats (ex: pdf)
+	return "hello world<br>"
 
+}
 func main() {
 	me := new(student)
 	me.name = "Stephen Wiley"
 	reader := bufio.NewReader(os.Stdin)
 	me.tsvimport(reader)
-	fmt.Print(me)
+	fmt.Print(me.typetrans())
 }
