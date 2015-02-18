@@ -50,12 +50,15 @@ func getclass(in *bufio.Reader) *class {
 	Class.subject = feilds[1]
 	i, e = strconv.ParseInt(feilds[2], 0, 32)
 	if e != nil {
-		return nil
+		Class.part = 0
+	} else {
+		Class.part = int(i)
 	}
-	Class.part = int(i)
 
 	Class.grade = rune(feilds[3][0])
-	Class.book = feilds[4]
+	if len(feilds) > 4 {
+		Class.book = feilds[4]
+	}
 	return Class
 
 }
