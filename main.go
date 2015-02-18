@@ -9,29 +9,37 @@ import "strconv"
 type class struct {
 	year    int
 	subject string
+	part    int
 	grade   rune
 	book    string
 }
 
 func (this class) String() string {
-	return fmt.Sprintf("%d\t%s\t%c\t%s", this.year, this.subject, this.grade, this.book)
+	return fmt.Sprintf("%d,\t%s,\t%d,\t%c,\t%s", this.year, this.subject, this.part, this.grade, this.book)
 }
 func getClass(in *bufio.Reader) *class {
 	Class := new(class)
 	//TODO: do this correctly
 	line, e := in.ReadString('\n')
-	if e == nil {
-		feilds := strings.Split(line, "\t")
-		i, e := strconv.ParseInt(feilds[0], 0, 32)
-		Class.year = int(i)
-		Class.subject = feilds[1]
-		Class.grade = rune(feilds[2][0])
-		Class.book = feilds[3]
-		if e == nil {
-			return Class
-		}
+	if e != nil {
+		return nil
 	}
-	return nil
+	feilds := strings.Split(line, "\t")
+	i, e := strconv.ParseInt(feilds[0], 0, 32)
+	if e != nil {
+		return nil
+	}
+	Class.year = int(i)
+	Class.subject = feilds[1]
+	i, e = strconv.ParseInt(feilds[2], 0, 32)
+	if e != nil {
+		return nil
+	}
+	Class.part = int(i)
+
+	Class.grade = rune(feilds[3][0])
+	Class.book = feilds[4]
+	return Class
 
 }
 
