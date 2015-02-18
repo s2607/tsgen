@@ -6,6 +6,12 @@ import "os"
 import "strings"
 import "strconv"
 
+type student struct {
+	classes []class
+	gpa     float32
+	name    string
+}
+
 type class struct {
 	year    int
 	subject string
@@ -17,7 +23,18 @@ type class struct {
 func (this class) String() string {
 	return fmt.Sprintf("%d,\t%s,\t%d,\t%c,\t%s", this.year, this.subject, this.part, this.grade, this.book)
 }
-func getClass(in *bufio.Reader) *class {
+func (this student) String() string {
+	s := this.name
+	s += "\n"
+	for i, v := range this.classes {
+		i = i //TODO:ugh
+		s = s + v.String()
+		s = s + "\n"
+	}
+	return s
+
+}
+func getclass(in *bufio.Reader) *class {
 	Class := new(class)
 	//TODO: do this correctly
 	line, e := in.ReadString('\n')
@@ -42,10 +59,20 @@ func getClass(in *bufio.Reader) *class {
 	return Class
 
 }
+func (Student *student) appendclass(Class class) {
+	Student.classes = Student.classes[0 : len(Student.classes)+1]
+	Student.classes[len(Student.classes)] = Class
+}
+func (Student student) tsvimport(in *bufio.Reader) {
+	for c := getclass(in); c != nil; c = getclass(in) {
+		Student.appendclass(*c)
+	}
+}
 
 func main() {
-
+	me := new(student)
+	me.name = "Stephen Wiley"
 	reader := bufio.NewReader(os.Stdin)
-	firstclass := getClass(reader)
-	fmt.Println(firstclass)
+	me.tsvimport(reader)
+	fmt.Print(me)
 }
