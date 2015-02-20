@@ -42,9 +42,9 @@ func (this class) String() string {
 }
 func (this class) Html() string {
 	if this.part > 0 {
-		return fmt.Sprintf("<td>%s</td><td>%d</td><td>%c</td><td>%s</td>", this.subject, this.part, this.grade, this.book)
+		return fmt.Sprintf("<td>%s</td><td>%d</td><td>%c</td><td>%s</td><td>%d</td>", this.subject, this.part, this.grade, this.book, this.credits)
 	} else {
-		return fmt.Sprintf("<td>%s</td><td>N/A</td><td>%c</td><td>%s</td>", this.subject, this.grade, this.book)
+		return fmt.Sprintf("<td>%s</td><td>N/A</td><td>%c</td><td>%s</td><td>%d</td>", this.subject, this.grade, this.book, this.credits)
 	}
 }
 func (this schoolyear) String() string {
@@ -94,6 +94,13 @@ func getclass(in *bufio.Reader) *class {
 	if len(feilds) > 4 {
 		Class.book = feilds[4]
 	}
+	Class.credits = 1
+	if len(feilds) > 5 {
+		i, e = strconv.ParseInt(feilds[5], 0, 32)
+		if e != nil {
+			Class.credits = int(i)
+		}
+	}
 	return Class
 
 }
@@ -109,7 +116,7 @@ func (Student *student) tsvimport(in *bufio.Reader) {
 func (year schoolyear) Html() string {
 	//TODO: this should really use some kind of file pointer instead
 	//eventually we may want to export weird formats (ex: pdf)
-	s := "<table rules='all'><tr><th>Subject</th><th>Part</th><th>Grade letter</th><th>Book title</th></tr>"
+	s := "<table rules='all'><tr><th>Subject</th><th>Part</th><th>Grade letter</th><th>Book title</th><th>Credits</th></tr>"
 	for i, v := range year.classes {
 		s = s + "<tr>"
 		i = i //TODO:ugh
