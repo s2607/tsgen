@@ -7,9 +7,7 @@ import "strings"
 import "strconv"
 
 type student struct {
-	gpa     float32
 	name    string
-	credits int
 	address string
 	parents string
 	bday    string //TODO: <should be time type or long int or whatever
@@ -18,6 +16,14 @@ type student struct {
 	gyear   int    //gdate only contanes month/day, year is seperated out for auto gen table headers
 	years   []schoolyear
 }
+
+func (this student) gpa() float32 {
+	return 9000.1
+}
+func (this student) credits() int {
+	return 100
+}
+
 type schoolyear struct {
 	classes []class
 }
@@ -121,8 +127,13 @@ func (Student student) typetrans() string {
 	s := "<html>"
 	s = s + "<title>" + Student.name + "</title><body>\n"
 	s = s + "<h1>" + Student.name + "</h1><br>\n"
+	//	s = s + "<br><h2>Minfo</h2<br>"
+	s = s + "Address: " + Student.address + "<br>\n"
+	s = s + "Parrents: " + Student.parents + "<br>\n"
+	s = s + "Birth Date: " + Student.bday + "<br>\n"
+	s = s + "Graduation date: " + Student.gdate + fmt.Sprintf(" %d", Student.gyear) + "<br>\n"
 	for i, v := range Student.years {
-		s = s + "<h2> Year:" + fmt.Sprint(Student.gyear-4+i) + "-" + fmt.Sprint(Student.gyear-4+i+1) + "</h2><br>"
+		s = s + "<h3> Year:" + fmt.Sprint(Student.gyear-4+i) + "-" + fmt.Sprint(Student.gyear-4+i+1) + "</h3><br>"
 		s = s + v.Html()
 		s = s + "<hr>\n"
 	}
@@ -134,6 +145,11 @@ func main() {
 	me := new(student)
 	me.name = "Stephen Wiley"
 	me.gyear = 2011
+	me.gender = 'M'
+	me.address = "1180 Lickinghole rd. Goochland VA 23063"
+	me.gdate = "July 4th"
+	me.parents = "Glen and Jorie Wiley"
+	me.bday = "May 24th 1994"
 	reader := bufio.NewReader(os.Stdin)
 	me.tsvimport(reader)
 	fmt.Print(me.typetrans())
