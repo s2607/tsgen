@@ -20,8 +20,22 @@ type student struct {
 func (this student) gpa() float32 {
 	return 9000.1
 }
+func (this schoolyear) credits() int {
+	var isum = 0
+	for i, v := range this.classes {
+		i = i
+		isum = isum + v.credits
+	}
+	return isum
+}
+
 func (this student) credits() int {
-	return 100
+	var isum = 0
+	for i, v := range this.years {
+		i = i //TODO: ugh
+		isum = isum + v.credits()
+	}
+	return isum
 }
 
 type schoolyear struct {
@@ -139,6 +153,7 @@ func (Student student) typetrans() string {
 	s = s + "Parrents: " + Student.parents + "<br>\n"
 	s = s + "Birth Date: " + Student.bday + "<br>\n"
 	s = s + "Graduation date: " + Student.gdate + fmt.Sprintf(" %d", Student.gyear) + "<br>\n"
+	s = s + fmt.Sprintf("Total Credits earned:%d ", Student.credits())
 	for i, v := range Student.years {
 		s = s + "<h3> Year:" + fmt.Sprint(Student.gyear-4+i) + "-" + fmt.Sprint(Student.gyear-4+i+1) + "</h3><br>"
 		s = s + v.Html()
