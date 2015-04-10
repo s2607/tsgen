@@ -5,6 +5,8 @@ import "bufio"
 import "os"
 import "strings"
 import "strconv"
+import "io/ioutil"
+import "encoding/base64"
 
 type student struct {
 	name    string
@@ -108,13 +110,20 @@ func getclass(in *bufio.Reader) *class {
 	if len(feilds) > 4 {
 		Class.book = feilds[4]
 	}
-	Class.credits = 1
-	if len(feilds) > 5 {
+	if int(Class.grade) <= int('C') {
+		Class.credits = 1
+	} else {
+		Class.credits = 0
+	}
+	if Class.subject == "PE" {
+		Class.credits = 0
+	}
+	/*	if len(feilds) > 5 {
 		i, e = strconv.ParseInt(feilds[5], 0, 32)
 		if e != nil {
 			Class.credits = int(i)
 		}
-	}
+	}*/
 	return Class
 
 }
@@ -142,6 +151,18 @@ func (year schoolyear) Html() string {
 
 }
 
+func signiture() string {
+	dc, e := ioutil.ReadFile("./signiture.jpg")
+	out := ""
+	if e != nil {
+		//eprint(1, e)
+		return "Please ensure signiture.jpg is available in the current proscess working directory."
+	}
+	out = base64.StdEncoding.EncodeToString(dc)
+
+	return "<img src='data:image/jpeg;base64," + string(out) + "'></img>"
+
+}
 func (Student student) typetrans() string {
 	//TODO: this should really use some kind of file pointer instead
 	//eventually we may want to export weird formats (ex: pdf)
@@ -160,6 +181,9 @@ func (Student student) typetrans() string {
 		s = s + "<hr>\n"
 	}
 	s = s + "</table>"
+	s = s + "<br><br>I certify that this student has completed the equivalent of a secondary education and that it abides by the state standards<br>"
+	s = s + "Signature of Parent/Guardian/School Administrator: " + signiture()
+	s = s + "</html>"
 	return s
 
 }
